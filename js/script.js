@@ -1,9 +1,7 @@
 const gettyURL = "https://data.getty.edu/museum/collection/object/";
-const gettyObjIds = ["c4aeaa30-cae0-40bf-a08b-784930e64e27", "b8339144-4f46-40f9-9d21-baef4f8269ac", "9a9c0a0c-bcbc-46bc-8a7a-d1dcb06085ed",
-    "3b9590a9-2572-416b-87f8-d7c0c9d43e39", "4ad4af14-88da-411d-b1c4-8d17c8b065a5", "a0a36f5b-bd63-4456-ac06-e2bfde616639",
-    "75bf6827-db53-46dd-b60a-c681841f59f8", "e02c61c1-2b34-4888-9bb1-c18b11d37f61", "da4ff78d-766b-4bdc-92da-118591355a2f",
-    "d3f83add-a9ff-4254-aec2-cca5cd4e7dc7", "fc544129-6916-4a8c-bb48-f37704b16b00", "211461e7-dac8-48c9-9a16-2893f7016300",
-    "548dd53b-cc62-4edf-89ed-191363e3b962"]; // Array of Getty object IDs
+const gettyObjIds = ["c4aeaa30-cae0-40bf-a08b-784930e64e27", "3b9590a9-2572-416b-87f8-d7c0c9d43e39", "4ad4af14-88da-411d-b1c4-8d17c8b065a5",
+    "e02c61c1-2b34-4888-9bb1-c18b11d37f61", "da4ff78d-766b-4bdc-92da-118591355a2f", "fc544129-6916-4a8c-bb48-f37704b16b00",
+    "211461e7-dac8-48c9-9a16-2893f7016300"]; // Array of Getty object IDs
 const gettyObjUrl = gettyURL + gettyObjIds;
 
 const sliders = document.querySelectorAll(".hero-slider");
@@ -454,36 +452,6 @@ async function getPaintingInfo(id) {
 }
 
 
-
-
-
-
-
-
-// TEMPORARY: click a painting to get hotspot coordinates. Remove before submitting.
-function logHotspotPosition(viewer) {
-    viewer.addEventListener("click", (event) => {
-        const img = viewer.querySelector("img");   // the painting the library created
-        if (!img) return;
-
-        const box = img.getBoundingClientRect();    // the image's current size and position
-
-        // How far into the image the click was, as a percentage
-        const x = ((event.clientX - box.left) / box.width * 100).toFixed(1);
-        const y = ((event.clientY - box.top) / box.height * 100).toFixed(1);
-
-        console.log(`x: "${x}%", y: "${y}%"`);
-    });
-}
-
-
-
-
-
-
-
-
-
 // Build every painting section
 async function buildExhibition() {
     const container = document.querySelector("#exhibition");
@@ -497,6 +465,10 @@ async function buildExhibition() {
 
             const section = document.createElement("section");
             section.className = "painting";
+
+            //unique id so button can link to it
+            const index = exhibition.indexOf(painting);
+            section.id = "painting-" + index;
 
             const heading = document.createElement("h2");
             heading.textContent = info.title;
@@ -512,7 +484,44 @@ async function buildExhibition() {
             const viewer = document.createElement("div");
             viewer.className = "painting-viewer";
 
-            section.append(heading, meta, descriptionBox, viewer);
+            const nextButton = document.createElement("a");
+            nextButton.className = "hero-btn next-btn"; // reuse hero button style
+
+            if (index < exhibition.length - 1) {
+                // link to next painting
+                nextButton.href = "#painting-" + (index + 1);
+                nextButton.textContent = "NEXT";
+            } else {
+                // last painting links to top
+                nextButton.href = "#top";
+                nextButton.textContent = "BACK TO START";
+            }
+
+            const textBox = document.createElement("div");
+            textBox.className = "painting-text";
+            textBox.append(heading, meta, descriptionBox);
+
+            // open/close textbox
+            const toggleButton = document.createElement("button");
+            toggleButton.className = "hero-btn text-toggle"; // reuse hero button style
+            toggleButton.textContent = "HIDE";
+
+            toggleButton.addEventListener("click", () => {
+                textBox.classList.toggle("hidden"); // add/remove hidden class based on whether it is showing
+
+                if (textBox.classList.contains("hidden")) {
+                    toggleButton.textContent = "SHOW";
+                } else {
+                    toggleButton.textContent = "HIDE";
+                }
+            });
+
+            //keep textBox and toggleButton together
+            const textPanel = document.createElement("div");
+            textPanel.className = "painting-panel";
+            textPanel.append(toggleButton, textBox);
+
+            section.append(viewer, textPanel, nextButton);
             container.appendChild(section);
 
 
@@ -526,8 +535,6 @@ async function buildExhibition() {
                 placement: "auto",
                 zoom: true
             });
-
-            logHotspotPosition(viewer);   // TEMPORARY
 
         } catch (error) {
             console.error("could not build painting: ", painting.id, error);

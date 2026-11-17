@@ -1,41 +1,34 @@
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.hero-content h1 {
-    text-transform: uppercase;
-    margin-bottom: 10px;
-}
-
-.hero-content p {
-    text-transform: uppercase;
-    margin-top: 0;
-    font-size: 24px;
-}
+/*HERO*/
 
 .hero {
     position: relative;
     height: 100vh;
     overflow: hidden;
-    background: #111;
-
+    /*while slideshow loads*/
+    background-color: #111;
     font-size: 34px;
-    background-color: #f4f4f4;
 }
 
 .hero-slider {
     position: absolute;
     inset: 0;
-
+    z-index: 0;
     background-size: cover;
     background-position: center;
     filter: blur(4px);
+    /*hides edges*/
     transform: scale(1.05);
-
     opacity: 0;
     transition: opacity 2s ease-in-out;
-    z-index: 0;
 }
 
 .hero-slider.active {
@@ -46,18 +39,41 @@ body {
     position: absolute;
     inset: 0;
     z-index: 1;
-
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     align-items: center;
-
+    padding: 0 20px;
     text-align: center;
     color: #fff;
-    padding: 0 20px;
 }
 
+.hero-content h1 {
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.hero-content p {
+    margin-top: 0;
+    font-size: 24px;
+    text-transform: uppercase;
+}
+
+.hero-content .statement {
+    max-width: 1000px;
+}
+
+.hero-content .statement p {
+    font-size: 18px;
+    text-transform: none;
+}
+
+a {
+    color: inherit;
+}
+
+/*BUTTONS - hero, next and toggle hide/show*/
 .hero-btn {
     display: inline-block;
     margin-top: 5px;
@@ -77,48 +93,92 @@ body {
     color: #111;
 }
 
-html {
-    scroll-behavior: smooth;
-}
-
-.painting {
-    max-width: none;
-    margin: 0 auto;
-    padding: 15px 0;
-}
-
-.painting h2 {
-    color: #ddd;
-    font-size: 28px;
-    margin: 0 0 16px;
-}
-
-.painting-description {
-    max-width: none;
-    line-height: 1.6;
-    margin: 0 0 32px;
-    color: #e0e0e0;
-}
-
-/*padding on sides only for text*/
-.painting h2,
-.painting-meta,
-.painting-description {
-    padding: 0 60px;
-}
-
-.painting-meta {
-    color: #b1b1b1;
-}
-
-.painting-viewer {
-    width: 100%;
-    height: 70vh;
-    overflow-y: auto;
-    cursor: auto;
-}
+/*EXHIBITION - paintings, textbox, etc*/
 
 #exhibition {
     background-color: #111;
     color: #ddd;
+}
+
+.painting {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.painting-viewer {
+    height: 100%;
+    overflow-y: auto;
+}
+
+/*text panel*/
+
+.painting-panel {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: min(500px, calc(100% - 200px));
+    display: flex;
+    flex-direction: column;
+}
+
+.painting-text {
+    min-height: 0;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 25px;
+    background-color: rgba(0, 0, 0, 0.486);
+    backdrop-filter: blur(5px);
+    color: #e0e0e0;
+    transition: transform 0.5s ease, opacity 0.5s ease, visibility 0.5s;
+}
+
+.painting-text.hidden {
+    transform: translateX(calc(100% + 25px));
+    opacity: 0;
+    visibility: hidden;
+}
+
+.painting-text h2 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: #ddd;
+}
+
+.painting-meta {
+    margin: 0 0 16px;
+    color: #b1b1b1;
+}
+
+.painting-description {
+    line-height: 1.5;
+}
+
+/*no extra space under lasy paragraph*/
+.painting-description p:last-child {
+    margin-bottom: 0;
+}
+
+/*hide/show button*/
+.text-toggle {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    right: 0;
+    margin: 0;
+    padding: 5px 15px;
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.055);
+}
+
+.next-btn {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    margin: 0;
 }
