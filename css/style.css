@@ -122,6 +122,7 @@ a {
     width: min(500px, calc(100% - 200px));
     display: flex;
     flex-direction: column;
+    pointer-events: none;
 }
 
 .painting-text {
@@ -172,6 +173,11 @@ a {
     font-family: inherit;
     cursor: pointer;
     background-color: rgba(0, 0, 0, 0.055);
+}
+
+.text-toggle,
+.painting-text {
+    pointer-events: auto;
 }
 
 .next-btn {
